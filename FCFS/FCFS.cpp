@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
+static int index=1;
 template<typename var>
 void printVector(vector<var> a)
 {
@@ -43,10 +44,11 @@ public:
 };
 class FCFS
 {
+	public:
 	vector<Process> e;
 	vector<float> startTime;
 	vector<float> endTime;
-public:
+
 	 FCFS(vector<Process> p):startTime(),endTime()
 	 {
 	 	e=p;
@@ -113,17 +115,21 @@ public:
 	 
 	
 };
-void printHandle(vector<Process> p)
+void printHandle(vector<Process> p,vector<float> start,vector<float> end)
 {
 	
 	cout<<"No. of job(s):"<<p.size()<<endl;
 	
-	cout<<"Sr No.	   Arrival Time(s) 	   Burst Time(s)\n";
+	cout<<"Sr No.\t\tArrival Time(s)\t\tBurst Time(s)\t\tStart\t\tEnd"<<endl;
+	
 		   // .........|.........|.........|.........|.........|
 	for(int i=0;i<p.size();i++)
 	{
-		cout<<setfill('0')<<setw(2)<<i+1<<".		";
-		cout<<setfill(' ')<<setw(10)<<p[i].arrivalTime<<setfill(' ')<<setw(17)<<p[i].burstTime<<endl;
+		cout<<setfill('0')<<setw(2)<<p[i].id;
+		cout<<setfill(' ')<<setw(18)<<p[i].arrivalTime;
+		cout<<setfill(' ')<<setw(18)<<p[i].burstTime;
+		cout<<setfill(' ')<<setw(19)<<start[i];
+		cout<<setfill(' ')<<setw(10)<<end[i]<<endl;
 	}
 	//cout<<"exitingprinthandle"<<endl;
 }
@@ -141,9 +147,9 @@ vector<Process> handle()
 		cin>>aT;
 		float bT;
 		cin>>bT;
-		ans.push_back(Process(aT,bT,i));
+		ans.push_back(Process(aT,bT,index++));
 	}
-	printHandle(ans);
+	
 	//cout<<"exitinghandle"<<endl;
 	return ans;
 }
@@ -186,7 +192,7 @@ int main()
 			{
 				obj=new FCFS(p);
 			}
-			
+			printHandle(obj->e,obj->getstartTime(),obj->getendTime());
 		}
 		else if(input=="waiting")
 		{
