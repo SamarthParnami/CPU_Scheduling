@@ -3,7 +3,7 @@ using namespace std;
 
 static int identity=1;
 
-
+//cout<<"Developed By Samarth Parnami"<<endl;
 template<typename var>
 void swaping(var &a,var &b)
 {
@@ -192,6 +192,7 @@ public:
 	float time;
 	NPSJF(vector<Process> p):startTime(p.size()),endTime(p.size())
 	{
+		//cout<<"Developed By Samarth Parnami"<<endl;
 		job=p;
 		time=0;
 		processTime();
@@ -422,7 +423,7 @@ int main()
 			cout<<"Type help to get all commands\n";
 		} 
 		  	
-		  	
+		 //cout<<"Developed By Samarth Parnami"<<endl; 	
 		//cout<<input<<endl; 	
 
     }
