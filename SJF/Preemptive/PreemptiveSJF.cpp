@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
+//cout<<"Developed By Samarth Parnami"<<endl;
 static int identity=1;
 
 
@@ -19,7 +20,14 @@ void printVector(vector<var> a)
 		cout<<a[i]<<" ";
 	}cout<<endl;
 }
-
+template<typename var>
+void printVectorOfVector(vector<vector<var>> a)
+{
+	for(int i=0;i<a.size();i++)
+	{
+		printVector(a[i]);
+	}
+}
 template<typename var>
 void printMatrix(vector<vector<var>> m)
 {
@@ -39,6 +47,7 @@ var vectorSum(vector<var> a)
 	}
 	return sum;
 }
+
 
 class Process
 {
@@ -81,6 +90,10 @@ class ProcessQueue
 public:
 	vector<Process> job;
 	unordered_map<int,int> map;
+	ProcessQueue():job(0)
+	{
+		
+	}
 	ProcessQueue(vector<Process> p)
 	{
 		job=p;
@@ -207,143 +220,157 @@ public:
 	PSJF(vector<Process> p):startTime(p.size()),endTime(p.size())
 	{
 		job=p;
-		processTime();
-		time=0;
+		time=job[0].arrivalTime;
+		processTime();		
 	}
 	void processTime()
 	{
-
+		//cout<<"Entering processTime"<<endl;
 		vector<Process> p=job;
-		ProcessQueue que({});
+		ProcessQueue que;
+		cout<<time<<endl;
 		while(p.size()>0)
 		{
-
 			Process on;
 			if(!que.isEmpty())
 			{
+				//cout<<"NoN Empty Queue"<<endl;
 				on=que.extractRoot();
-				while(on.burstTime<=0)
-				{
-					on=que.extractRoot();
-				}
 			}
 			else
 			{
-				on=p[0];
-				p.erase(p.begin());
+				//cout<<"Empty Queue"<<endl;
+				time=p[0].arrivalTime;
+				//cout<<p[0]<<endl;
+				while(p.size()>0&&p[0].arrivalTime<=time)
+				{
+					que.insert(p[0]);
+					p.erase(p.begin());
+				}
+				continue;
 			}
 			//cout<<on<<endl;
-			//cout<<time<<endl;
-			int greater=on.arrivalTime>time?on.arrivalTime:time;
-			//cout<<"greater="<<greater<<endl;
+			float greater=on.arrivalTime>time?on.arrivalTime:time;
 			startTime[on.id-1].push_back(greater);
 			while(p.size()>0)
 			{
-				//cout<<"p0="<<p[0]<<endl;
 				if(p[0].arrivalTime<=greater+on.burstTime)
 				{
-					//cout<<" "<<p[0]<<endl;
 					time=p[0].arrivalTime;
-					que.insert(p[0]);
-					p.erase(p.begin());
-					if(que.top().burstTime<=on.burstTime-(time-greater))
+					if(p[0].burstTime<on.burstTime-(time-greater))
 					{
-						endTime[on.id-1].push_back(time);
-						on.arrivalTime=time;
+						//cout<<"NEW BTIME= "<<on.burstTime-(time-greater)<<endl;
+						que.insert(p[0]);
+						p.erase(p.begin());
 						on.burstTime-=(time-greater);
 						que.insert(on);
+						endTime[on.id-1].push_back(time);
+						break;
 					}
 					else
 					{
-						endTime[on.id-1].push_back(greater+on.burstTime);
-						time=greater+on.burstTime;
+						que.insert(p[0]);
+						p.erase(p.begin());
 					}
+					
 				}
 				else
 				{
+					endTime[on.id-1].push_back(greater+on.burstTime);
+					time=greater+on.burstTime;
 					break;
 				}
-				
-				
 			}
-			// cout<<time<<endl;
-			// cout<<"---"<<endl;
+			if(startTime[on.id-1].size()>endTime[on.id-1].size())
+			{
+				time=greater+on.burstTime;
+				endTime[on.id-1].push_back(time);
+			}
 
 		}
 		while(!que.isEmpty())
 		{
-			//cout<<"queue"<<endl;
 			Process on=que.extractRoot();
-			//cout<<on<<endl;
-			int greater=on.arrivalTime>time?on.arrivalTime:time;
+			float greater=on.arrivalTime>time?on.arrivalTime:time; 
 			startTime[on.id-1].push_back(greater);
-			endTime[on.id-1].push_back(greater+on.burstTime);
-			time=*(endTime[on.id-1].end()-1);
-
+			time=greater+on.burstTime;
+			endTime[on.id-1].push_back(time);
 		}
+
+		//cout<<"Exiting processTime"<<endl;		
 	}
 	void sendNewJob(vector<Process> p)
 	{
-
+		//cout<<"Entering sendNewJob vector"<<endl;
 		job.insert(job.end(),p.begin(), p.end());
-		time=0;
-		vector<vector<float>> temp(job.size());
-		startTime=temp;
-		endTime=temp;
+		time=job[0].arrivalTime;
+		startTime.clear();
+		startTime.resize(job.size());
+		endTime.clear();
+		endTime.resize(job.size());
 		processTime();
+		//cout<<"Exiting sendNewJob vector "<<endl;	
+		
 	}
 	void sendNewJob(Process p)
 	{
+		//cout<<"Entering sendNewJob object."<<endl;
+		job.push_back(p);
+		//cout<<"Exiting sendNewJob object."<<endl;	
 		sendNewJob({p});
 	}
 	vector<float> getstartTime()
 	{
-		//cout<<"start"<<endl;
-		vector<float> s(job.size());
+		//cout<<"Entering getstartTime"<<endl;
+		vector<float> ans(job.size());
 		for(int i=0;i<job.size();i++)
 		{
-			s[i]=startTime[i][0];
+			ans[i]=startTime[i][0];
 		}
-		//cout<<"exit start"<<endl;
-		return s;
+		//cout<<"Exiting getstartTime"<<endl;	
+		return ans;
 	}
 	vector<float> getendTime()
 	{
-		vector<float> e(job.size());
+		
+		//cout<<"Entering getendTime"<<endl;
+		vector<float> ans(job.size());
 		for(int i=0;i<job.size();i++)
 		{
-
-			e[i]=endTime[i][endTime[i].size()-1];
-			//cout<<e[i]<<endl;
+			//cout<<endTime[i].size()-1<<" ";
+			ans[i]=(endTime[i][endTime[i].size()-1]);
 		}
-		//cout<<"exit end"<<endl;
-		return e;
+		//cout<<"\nExiting getendTime"<<endl;	
+		return ans;
 	}
 	vector<float> waitingTime()
 	{
-		vector<float> wait;
-
-		for(int i=0;i<job.size();i++)
+		cout<<"Entering waiting time"<<endl;
+		vector<vector<float>> e=endTime;
+		e.insert(e.begin(),vector<float>(1,0));
+		vector<float> ans(job.size(),0);
+		for(int i=0;i<startTime.size();i++)
 		{
-			int w=0;
-			vector<float> end=endTime[i];
-			end.insert(end.begin(),job[i].arrivalTime);
 			for(int j=0;j<startTime[i].size();j++)
 			{
-				w+=startTime[i][j]-end[j];
+				ans[i]+=(startTime[i][j]-e[i][j]);
 			}
-			wait.push_back(w);
 		}
-		return wait;
+		cout<<"Exiting waiting time"<<endl;	
+		
+		return ans;
 	}
 	vector<float> turnaroundTime()
 	{
-		vector<float> turn;
-		for(int i=0;i<startTime.size();i++)
+		cout<<"Entering turnaroundTime"<<endl;
+		vector<float> ans(job.size(),0);
+		for(int i=0;i<job.size();i++)
 		{
-			turn.push_back(endTime[i][endTime[i].size()-1]-job[i].arrivalTime);
+			ans[i]=(*(endTime[i].end()-1)-startTime[i][0]);
 		}
-		return turn;
+		cout<<"Exiting turnaroundTime"<<endl;	
+		
+		return ans;
 	}
 
 };
