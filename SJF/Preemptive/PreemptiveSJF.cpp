@@ -1,6 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-//cout<<"Developed By Samarth Parnami"<<endl;
 static int identity=1;
 
 
@@ -84,7 +83,6 @@ public:
 	unordered_map<int,int> map;
 	ProcessQueue(vector<Process> p)
 	{
-		//cout<<"Developed By Samarth Parnami"<<endl;
 		job=p;
 		for(int i=0;i<job.size();i++)
 		{
@@ -208,7 +206,6 @@ public:
 	int time;
 	PSJF(vector<Process> p):startTime(p.size()),endTime(p.size())
 	{
-		//cout<<"Developed By Samarth Parnami"<<endl;
 		job=p;
 		processTime();
 		time=0;
@@ -484,7 +481,7 @@ int main()
 		{
 			cout<<"Type help to get all commands\n";
 		} 
-		//cout<<"Developed By Samarth Parnami"<<endl;  		
+		  		
 
     }
     return 0;
