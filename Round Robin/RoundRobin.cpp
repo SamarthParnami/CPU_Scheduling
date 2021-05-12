@@ -2,16 +2,6 @@
 using namespace std;
 //cout<<"Developed By Samarth Parnami"<<endl;
 static int identity=1;
-
-
-template<typename var>
-void swaping(var &a,var &b)
-{
-	var temp=a;
-	a=b;
-	b=temp;
-}
-
 template<typename var>
 void printVector(vector<var> a)
 {
@@ -47,18 +37,14 @@ var vectorSum(vector<var> a)
 	}
 	return sum;
 }
-
-
 class Process
 {
+	//cout<<"Developed By Samarth Parnami"<<endl;
 public:
 	int id;
 	float burstTime;
 	float arrivalTime;
-	Process()
-	{
-
-	}
+	
 	Process(float aT,float bT,int id)
 	{
 		this->burstTime=bT;
@@ -84,226 +70,63 @@ public:
 	 	return *this==b?false:true;
 	 }
 };
-
-class ProcessQueue
+class RoundRobin
 {
+	//cout<<"Developed By Samarth Parnami"<<endl;
 public:
-	vector<Process> job;
-	unordered_map<int,int> map;
-	ProcessQueue():job(0)
-	{
-		
-	}
-	ProcessQueue(vector<Process> p)
-	{
-		job=p;
-		for(int i=0;i<job.size();i++)
-		{
-			map[job[i].id]=i;
-		}
-		buildMinHeap();		
-	}
-	void buildMinHeap()
-	{
-		for(int i=job.size()/2-1;i>=0;i--)
-		{
-			min_heapify(i);
-		}
-	}
-	void min_heapify(int index)
-	{
-		//cout<<index<<endl;
-		int left=index*2+1;
-		int right=index*2+2;
-		if(left<job.size()&&right<job.size())
-		{
-			if(job[left].burstTime<job[right].burstTime||(job[left].burstTime==job[right].burstTime&&job[left].arrivalTime<=job[right].arrivalTime))
-			{
-				if(job[index].burstTime>job[left].burstTime)
-				{
-					swaping(job[left],job[index]);
-					int temp=map[job[left].id];
-					map[job[left].id]=map[job[index].id];
-					map[job[index].id]=temp;
-					min_heapify(left);
-				}
-				else if(job[index].burstTime==job[left].burstTime)
-				{
-					if(job[index].arrivalTime>job[left].arrivalTime)
-					{
-						swaping(job[left],job[index]);
-						int temp=map[job[left].id];
-					map[job[left].id]=map[job[index].id];
-					map[job[index].id]=temp;
-						min_heapify(left);
-					}
-				}
-			}
-			else if(job[left].burstTime>job[right].burstTime||(job[left].burstTime==job[right].burstTime&&job[left].arrivalTime>job[right].arrivalTime))
-			{
-				if(job[index].burstTime>job[right].burstTime)
-				{
-					swaping(job[right],job[index]);
-					int temp=map[job[right].id];
-					map[job[right].id]=map[job[index].id];
-					map[job[index].id]=temp;
-					min_heapify(right);
-				}
-				else if(job[index].burstTime==job[right].burstTime)
-				{
-					if(job[index].arrivalTime>job[right].arrivalTime)
-					{
-						swaping(job[right],job[index]);
-						int temp=map[job[right].id];
-						map[job[right].id]=map[job[index].id];
-						map[job[index].id]=temp;
-						min_heapify(right);
-					}
-				}
-			}
-
-		}
-		else if(left<job.size())
-		{
-			if(job[index].burstTime>job[left].burstTime||((job[left].burstTime==job[index].burstTime&&job[left].arrivalTime<=job[index].arrivalTime)))
-			{
-				swaping(job[index],job[left]);
-				int temp=map[job[left].id];
-					map[job[left].id]=map[job[index].id];
-					map[job[index].id]=temp;
-				min_heapify(left);
-			}
-		}
-	}
-	Process extractRoot()
-	{
-		Process ans=job[0];
-		job[0]=job[job.size()-1];
-		job.erase(job.end()-1);
-		min_heapify(0);
-		return ans;
-	}
-	Process top()
-	{
-		return job[0];
-	}
-	void insert(Process a)
-	{
-		job.push_back(a);
-		buildMinHeap();
-	}
-	bool isEmpty()
-	{
-		return job.size()==0?true:false;
-	}
-	void updateBurst(int id ,float to)
-	{
-		int index=map[id];
-		job[index].burstTime=to;
-		min_heapify(index);
-	}
-};
-
-
-
-
-
-
-
-class PSJF
-{
-public:
+	float quantum;
 	vector<Process> job;
 	vector<vector<float>> startTime;
 	vector<vector<float>> endTime;
-	int time;
-	PSJF(vector<Process> p):startTime(p.size()),endTime(p.size())
+	float defaultTime;
+	RoundRobin(vector<Process> j,float quantum,float start=0):startTime(j.size()),endTime(j.size())
 	{
-		job=p;
-		time=job[0].arrivalTime;
-		processTime();		
+		job=j;
+		this->quantum=quantum;
+		defaultTime=start;
+		processTime();
 	}
 	void processTime()
 	{
-		//cout<<"Entering processTime"<<endl;
+		//cout<<"enter processTime"<<endl;
+		//cout<<"Developed By Samarth Parnami"<<endl;
 		vector<Process> p=job;
-		ProcessQueue que;
-		//cout<<time<<endl;
+		float time=defaultTime;
 		while(p.size()>0)
 		{
-			Process on;
-			if(!que.isEmpty())
+			for(int i=0;i<p.size();i++)
 			{
-				//cout<<"NoN Empty Queue"<<endl;
-				on=que.extractRoot();
-			}
-			else
-			{
-				//cout<<"Empty Queue"<<endl;
-				time=p[0].arrivalTime;
-				//cout<<p[0]<<endl;
-				while(p.size()>0&&p[0].arrivalTime<=time)
+				
+				time=p[i].arrivalTime<time?time:p[i].arrivalTime;
+				//cout<<time<<endl;
+				startTime[p[i].id-1].push_back(time);
+				if(p[i].burstTime<=quantum)
 				{
-					que.insert(p[0]);
-					p.erase(p.begin());
+					time+=p[i].burstTime;
+					endTime[p[i].id-1].push_back(time);
+					p[i].burstTime=0;					
+					p.erase(p.begin()+i);
+					i--;
 				}
-				continue;
-			}
-			//cout<<on<<endl;
-			float greater=on.arrivalTime>time?on.arrivalTime:time;
-			startTime[on.id-1].push_back(greater);
-			while(p.size()>0)
-			{
-				if(p[0].arrivalTime<=greater+on.burstTime)
+				else	
 				{
-					time=p[0].arrivalTime;
-					if(p[0].burstTime<on.burstTime-(time-greater))
-					{
-						//cout<<"NEW BTIME= "<<on.burstTime-(time-greater)<<endl;
-						que.insert(p[0]);
-						p.erase(p.begin());
-						on.burstTime-=(time-greater);
-						que.insert(on);
-						endTime[on.id-1].push_back(time);
-						break;
-					}
-					else
-					{
-						que.insert(p[0]);
-						p.erase(p.begin());
-					}
-					
+					time+=quantum;
+					endTime[p[i].id-1].push_back(time);
+					p[i].burstTime-=quantum;
 				}
-				else
+				if(time<=p[i+1].arrivalTime)
 				{
-					endTime[on.id-1].push_back(greater+on.burstTime);
-					time=greater+on.burstTime;
 					break;
 				}
 			}
-			if(startTime[on.id-1].size()>endTime[on.id-1].size())
-			{
-				time=greater+on.burstTime;
-				endTime[on.id-1].push_back(time);
-			}
-
 		}
-		while(!que.isEmpty())
-		{
-			Process on=que.extractRoot();
-			float greater=on.arrivalTime>time?on.arrivalTime:time; 
-			startTime[on.id-1].push_back(greater);
-			time=greater+on.burstTime;
-			endTime[on.id-1].push_back(time);
-		}
-
-		//cout<<"Exiting processTime"<<endl;		
+		
+		//cout<<"exit processTime"<<endl;
 	}
 	void sendNewJob(vector<Process> p)
 	{
 		//cout<<"Entering sendNewJob vector"<<endl;
 		job.insert(job.end(),p.begin(), p.end());
-		time=job[0].arrivalTime;
 		startTime.clear();
 		startTime.resize(job.size());
 		endTime.clear();
@@ -311,13 +134,6 @@ public:
 		processTime();
 		//cout<<"Exiting sendNewJob vector "<<endl;	
 		
-	}
-	void sendNewJob(Process p)
-	{
-		//cout<<"Entering sendNewJob object."<<endl;
-		job.push_back(p);
-		//cout<<"Exiting sendNewJob object."<<endl;	
-		sendNewJob({p});
 	}
 	vector<float> getstartTime()
 	{
@@ -345,9 +161,13 @@ public:
 	}
 	vector<float> waitingTime()
 	{
-		cout<<"Entering waiting time"<<endl;
+		//cout<<"Entering waiting time"<<endl;
 		vector<vector<float>> e=endTime;
-		e.insert(e.begin(),vector<float>(1,0));
+		for(int i=0;i<job.size();i++)
+		{
+			e[i].insert(e[i].begin(),job[i].arrivalTime);
+		}
+		
 		vector<float> ans(job.size(),0);
 		for(int i=0;i<startTime.size();i++)
 		{
@@ -356,26 +176,23 @@ public:
 				ans[i]+=(startTime[i][j]-e[i][j]);
 			}
 		}
-		cout<<"Exiting waiting time"<<endl;	
+		//cout<<"Exiting waiting time"<<endl;	
 		
 		return ans;
 	}
 	vector<float> turnaroundTime()
 	{
-		cout<<"Entering turnaroundTime"<<endl;
+		//cout<<"Entering turnaroundTime"<<endl;
 		vector<float> ans(job.size(),0);
 		for(int i=0;i<job.size();i++)
 		{
-			ans[i]=(*(endTime[i].end()-1)-startTime[i][0]);
+			ans[i]=(*(endTime[i].end()-1)-job[i].arrivalTime);
 		}
-		cout<<"Exiting turnaroundTime"<<endl;	
+		//cout<<"Exiting turnaroundTime"<<endl;	
 		
 		return ans;
 	}
-
 };
-
-
 
 
 void printHandle(vector<Process> p,vector<float> start,vector<float> end)
@@ -412,7 +229,6 @@ vector<Process> handle()
 		cin>>bT;
 		ans.push_back(Process(aT,bT,identity++));
 	}
-	
 	//cout<<"exitinghandle"<<endl;
 	return ans;
 }
@@ -436,18 +252,18 @@ int main()
 
 
 	// for getting input from input.txt
-    freopen("input.txt", "r", stdin);
+    //freopen("input.txt", "r", stdin);
     // for writing output to output.txt
-    freopen("output.txt", "w", stdout);
+    //freopen("output.txt", "w", stdout);
    // printHandle();
 
 	string input;
-    /*Process p1(0,5,1),p2(2,6,2),p3(4,2,3),p4(9,4,4),p5(10,2,5);
-    PSJF obj({p1,p2,p3,p4,p5});
-    vector<vector<float>> start=obj.startTime;
-    printMatrix(start);*/
-    //printHandle({p1,p2,p3,p4,p5},obj.startTime,obj.endTime);
-     PSJF* obj=nullptr;
+
+    //cout<<"Developed By Samarth Parnami"<<endl;
+    
+    float quantum;
+    cin>>quantum;
+     RoundRobin* obj=nullptr;
 
     while(cin>>input)
     {
@@ -455,6 +271,7 @@ int main()
      	
 		if(input=="addjobs"||input=="addjob"||input=="add job"||input=="add jobs")
 		{
+			//cout<<"addjob"<<endl;
 
 			vector<Process> p=handle();
 			if(obj)
@@ -463,7 +280,7 @@ int main()
 			}
 			else
 			{
-				obj=new PSJF(p);
+				obj=new RoundRobin(p,quantum);
 			}
 
 			printHandle(obj->job,obj->getstartTime(),obj->getendTime());		
@@ -512,4 +329,5 @@ int main()
 
     }
     return 0;
+    //cout<<"Developed By Samarth Parnami"<<endl;
 }
