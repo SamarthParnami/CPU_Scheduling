@@ -252,9 +252,9 @@ int main()
 
 
 	// for getting input from input.txt
-    //freopen("input.txt", "r", stdin);
+    freopen("input.txt", "r", stdin);
     // for writing output to output.txt
-    //freopen("output.txt", "w", stdout);
+    freopen("output.txt", "w", stdout);
    // printHandle();
 
 	string input;
