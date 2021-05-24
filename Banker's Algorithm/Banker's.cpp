@@ -125,7 +125,7 @@ public:
 	}
 	
 };
-int main()
+int main() //imput format 1. process,2. resource 3.available, 4.max, 5.alloc
 {
 	//reduce the runtime of th program
 	ios_base::sync_with_stdio(false);
@@ -136,24 +136,23 @@ int main()
     freopen("input.txt", "r", stdin);
     // for writing output to output.txt
     freopen("output.txt", "w", stdout);
-    int process;
-    int resource;
+    int process;  	         											 //count of processes
+    int resource;														//count of types of resources
     cin>>process;
     cin>>resource;
 
-   	vector<int> available(resource); 
-   
-   	vector<vector<int>> maxReq(process,vector<int>(resource));
-	vector<vector<int>> alloc(process,vector<int>(resource));
+   	vector<int> available(resource);									//currently available resources   
+   	vector<vector<int>> max(process,vector<int>(resource));				//max resource each process can ask for
+	vector<vector<int>> alloc(process,vector<int>(resource));			//resources cuurently allocated to each process
 	queue<Process*> ready;
 	queue<Process*> done;
 	
 	cin>>available;
-	cin>>maxReq;
+	cin>>max;
 	cin>>alloc;
 	for(int i=0;i<process;i++)
 	{
-		ready.push(new Process(i,alloc[i],maxReq[i]));
+		ready.push(new Process(i,alloc[i],max[i]));
 	}
 	cout<<"I/O handled"<<endl;
 	while(!ready.empty())
@@ -174,7 +173,7 @@ int main()
 			ready.pop();
 		}
 	}
-	cout<<"Safe Sequence =";
+	cout<<"Safe Sequence = ";
 	for(int i=0;i<process;i++)
 	{
 		cout<<(*done.front()).id<<" " ;
