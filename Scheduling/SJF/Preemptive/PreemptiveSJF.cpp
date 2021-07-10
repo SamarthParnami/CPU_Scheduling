@@ -23,7 +23,7 @@ void printVector(vector<var> a)
 template<typename var>
 void printVectorOfVector(vector<vector<var>> a)
 {
-	for(int i=0;i<a.size();i++)
+	for(int i=0;i<a.size();i++)//
 	{
 		printVector(a[i]);
 	}
@@ -345,7 +345,7 @@ public:
 	}
 	vector<float> waitingTime()
 	{
-		cout<<"Entering waiting time"<<endl;
+		//cout<<"Entering waiting time"<<endl;
 		vector<vector<float>> e=endTime;
 		e.insert(e.begin(),vector<float>(1,0));
 		vector<float> ans(job.size(),0);
@@ -356,19 +356,19 @@ public:
 				ans[i]+=(startTime[i][j]-e[i][j]);
 			}
 		}
-		cout<<"Exiting waiting time"<<endl;	
+		//cout<<"Exiting waiting time"<<endl;	
 		
 		return ans;
 	}
 	vector<float> turnaroundTime()
 	{
-		cout<<"Entering turnaroundTime"<<endl;
+		//cout<<"Entering turnaroundTime"<<endl;
 		vector<float> ans(job.size(),0);
 		for(int i=0;i<job.size();i++)
 		{
 			ans[i]=(*(endTime[i].end()-1)-startTime[i][0]);
 		}
-		cout<<"Exiting turnaroundTime"<<endl;	
+		//cout<<"Exiting turnaroundTime"<<endl;	
 		
 		return ans;
 	}

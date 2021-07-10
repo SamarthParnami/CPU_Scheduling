@@ -1,0 +1,3 @@
+I/O handled
+Safe Sequence = 0 2 3 4 
+DeadLocked Process:1 

@@ -1,0 +1,11 @@
+addjob
+4
+0 5
+2 1
+4 1
+5 2
+waiting
+turnaround
+addjob
+1
+12 2

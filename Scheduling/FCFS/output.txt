@@ -1,0 +1,29 @@
+No. of job(s):4
+Sr No.		Arrival Time(s)		Burst Time(s)		Start		End
+01                 0                 6                  0         6
+02                 1                 5                  6        11
+03                 3                 2                 11        13
+04                 6                 7                 13        20
+
+Average Waiting Time: 5
+Job Waiting times: 0 5 8 7 
+
+
+Average Turnaround Time: 10
+Job Turnaround times: 6 10 10 14 
+
+No. of job(s):5
+Sr No.		Arrival Time(s)		Burst Time(s)		Start		End
+01                 0                 6                  0         6
+02                 1                 5                  6        11
+03                 3                 2                 11        13
+04                 6                 7                 13        20
+05                 9                 5                 20        25
+
+Average Waiting Time: 6.2
+Job Waiting times: 0 5 8 7 11 
+
+
+Average Turnaround Time: 11.2
+Job Turnaround times: 6 10 10 14 16 
+

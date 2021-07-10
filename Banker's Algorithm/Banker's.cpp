@@ -125,7 +125,7 @@ public:
 	}
 	
 };
-int main() //imput format 1. process,2. resource 3.available, 4.max, 5.alloc
+int main() //input format 1. process,2. resource 3.available, 4.max, 5.alloc
 {
 	//reduce the runtime of th program
 	ios_base::sync_with_stdio(false);
@@ -146,7 +146,7 @@ int main() //imput format 1. process,2. resource 3.available, 4.max, 5.alloc
 	vector<vector<int>> alloc(process,vector<int>(resource));			//resources cuurently allocated to each process
 	queue<Process*> ready;
 	queue<Process*> done;
-	
+	vector<Process*> deadlock;
 	cin>>available;
 	cin>>max;
 	cin>>alloc;
@@ -155,30 +155,56 @@ int main() //imput format 1. process,2. resource 3.available, 4.max, 5.alloc
 		ready.push(new Process(i,alloc[i],max[i]));
 	}
 	cout<<"I/O handled"<<endl;
+	unordered_map<int,vector<int>> last;
 	while(!ready.empty())
 	{
 		
 		Process* p=ready.front();
 		//cout<<(*p)<<endl;
+		//cout<<available<<endl;
 		if((p->need)<=available)
 		{
+			//cout<<"if1"<<endl;
 			available=available+p->alloc;
 			done.push(p);
 			ready.pop();			
 		}
 		else
 		{
+			//cout<<"else 1"<<endl;
+			if(last.find(p->id)==last.end())
+			{
+				//cout<<"if2"<<endl;
+				last[p->id]=available;
+				ready.push(p);
+				ready.pop();
+			}
+			else if(last[p->id]==available)
+			{
+				//cout<<"else 2"<<endl;
+				deadlock.push_back(p);
+				ready.pop();
+			}
+			else
+			{
+				//cout<<"else 3"<<endl;
+				last[p->id]=available;
+				ready.push(p);
+				ready.pop();
+			}
 			
-			ready.push(p);
-			ready.pop();
 		}
 	}
 	cout<<"Safe Sequence = ";
-	for(int i=0;i<process;i++)
+	while(!done.empty())
 	{
-		cout<<(*done.front()).id<<" " ;
+		cout<<done.front()->id<<" ";
 		done.pop();
 	}
+	cout<<endl;
+	cout<<"DeadLocked Process:";
+	for(int i=0;i<deadlock.size();i++)
+		cout<<deadlock[i]->id<<" ";
 	cout<<endl;
 	return 0;
 }

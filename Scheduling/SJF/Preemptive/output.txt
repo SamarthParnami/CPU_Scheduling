@@ -1,0 +1,25 @@
+No. of job(s):4
+Sr No.		Arrival Time(s)		Burst Time(s)		Start		End
+01                 0                 5                  0         7
+02                 2                 1                  2         3
+03                 4                 1                  4         5
+04                 5                 2                  7         9
+Entering waiting time
+Exiting waiting time
+
+Average Waiting Time: 2.78103
+Job Waiting times: 8.12413 0 1 2 
+
+Entering turnaroundTime
+Exiting turnaroundTime
+
+Average Turnaround Time: 2.75
+Job Turnaround times: 7 1 1 2 
+
+No. of job(s):5
+Sr No.		Arrival Time(s)		Burst Time(s)		Start		End
+01                 0                 5                  0         7
+02                 2                 1                  2         3
+03                 4                 1                  4         5
+04                 5                 2                  7         9
+05                12                 2                 12        14

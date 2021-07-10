@@ -1,0 +1,12 @@
+Inserting item = 8
+Inserting item = 2
+Inserting item = 6
+Inserting item = 2
+Inserting item = 4
+Buffer overflow.
+8
+2
+6
+2
+4
+Buffer underflow.0
